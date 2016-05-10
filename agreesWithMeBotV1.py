@@ -18,15 +18,18 @@ agreePhrases=[
 	'Whoa, who said that, Shakespeare?']
 
 while True:
-	user = r.get_redditor('therealjakeh')
-	for thing in user.get_comments():
-		op_text = thing.body.lower()
-        	has_praw = any(string in op_text for string in prawWords)
+	try:
+		user = r.get_redditor('therealjakeh')
+		for thing in user.get_comments():
+			op_text = thing.body.lower()
+        		has_praw = any(string in op_text for string in prawWords)
         # Test if it contains a PRAW-related question
-		if thing.id not in already_done and has_praw:
-            		thing.reply(agreePhrases[random.randrange(0,len(agreePhrases))])
-            		already_done.append(thing.id)
-			print "Detected a post. Posting comment..."
-	time.sleep(210)
+			if thing.id not in already_done and has_praw:
+            			thing.reply(agreePhrases[random.randrange(0,len(agreePhrases))])
+            			already_done.append(thing.id)
+				print "Detected a post. Posting comment..."
+		time.sleep(210)
+	except ReadTimeout:
+		print "Http error. Will try again."
 
 

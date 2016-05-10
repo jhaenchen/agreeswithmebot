@@ -1,7 +1,7 @@
 import praw
 import time
 import random
-
+import pprint
 r = praw.Reddit('agreeswithme'
 		'Url:http://imtoopoorforaurl.com')
 r.login()
@@ -30,10 +30,16 @@ while True:
 				print "Detected a post. Posting comment..."
 		time.sleep(210)
 	except praw.errors.HTTPException:
-		print "Http timeout. Will try again."
+		print "Http exception. Will try again."
+	except praw.errors.RateLimitExceeded as error:
+            	print '\tSleeping for %d seconds' % error.sleep_time
+            	time.sleep(error.sleep_time)		
+	except praw.errors.APIException:
+		print "API exception. Will try again."
 	except (KeyboardInterrupt, SystemExit):
 		raise
 	except:
 		print "Unhandled exception, trying again..."
+		raise
 
 

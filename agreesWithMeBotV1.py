@@ -29,7 +29,11 @@ while True:
             			already_done.append(thing.id)
 				print "Detected a post. Posting comment..."
 		time.sleep(210)
-	except ReadTimeout:
-		print "Http error. Will try again."
+	except praw.errors.HTTPException:
+		print "Http timeout. Will try again."
+	except (KeyboardInterrupt, SystemExit):
+		raise
+	except:
+		print "Unhandled exception, trying again..."
 
 

@@ -37,9 +37,10 @@ while True:
 	except praw.errors.APIException:
 		print "API exception. Will try again."
 	except (KeyboardInterrupt, SystemExit):
+		print "Safe exit..."
 		raise
 	except:
-		print "Unhandled exception, trying again..."
+		print "Unhandled exception, bail!"
 		raise
 
 

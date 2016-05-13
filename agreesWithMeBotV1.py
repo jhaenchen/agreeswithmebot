@@ -32,8 +32,10 @@ while True:
 				if ("that" in message.body.lower()):
 					print "Got child  message, sending parent reply"
 					parent = r.get_info(thing_id=message.parent_id)
-					#Respond with a random sentence from the available collection
-					parent.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+					if(isinstance(parent, praw.objects.Comment)):
+						parent.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+					else:
+						message.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 				else:
 					print "Got message, sending reply"
 					message.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)

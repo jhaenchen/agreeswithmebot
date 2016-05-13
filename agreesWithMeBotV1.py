@@ -19,7 +19,12 @@ agreePhrases=[
 	'Yeah, you tell him!',
 	'Honestly it\'s comments like these that make me smile.',
 	'That\'s incredible! Literally amazing!',
-	'What\'s it like being so amazing?']
+	'What\'s it like being so amazing?',
+	'Just like grandma used to say. Wise words.',
+	'This made me start believing in god again. Amen.',
+	'I\'ve been on this earth fourty years and only now just realized what I\'ve been missing: your words.',
+	'This whole bot thing is overrated. I\'m just going to keep printing your comment forever instead. Because it\'s awesome.',
+	'Pretty. damn. smart.']
 
 appendPhrase = '\n\n^(Need some backup?) [^"/u/agreeswithmebot"](https://github.com/jhaenchen/agreeswithmebot)'
 while True:

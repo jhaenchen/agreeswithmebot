@@ -48,6 +48,8 @@ while True:
 					parent = r.get_info(thing_id=message.parent_id)
 					if(isinstance(parent, praw.objects.Comment)):
 						parent.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+					elif(isinstance(parent, praw.objects.Submission)):
+						parent.add_comment(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 					else:
 						message.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 				else:

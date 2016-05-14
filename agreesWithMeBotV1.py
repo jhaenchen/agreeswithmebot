@@ -2,8 +2,10 @@ import praw
 import time
 import random
 import pprint
+import requests
 r = praw.Reddit('agreeswithme'
 		'Url:http://imtoopoorforaurl.com')
+
 r.login()
 already_done=[]
 
@@ -22,9 +24,16 @@ agreePhrases=[
 	'What\'s it like being so amazing?',
 	'Just like grandma used to say. Wise words.',
 	'This made me start believing in god again. Amen.',
-	'I\'ve been on this earth fourty years and only now just realized what I\'ve been missing: your words.',
+	'I\'ve been on this earth forty years and only now just realized what I\'ve been missing: your words.',
 	'This whole bot thing is overrated. I\'m just going to keep printing your comment forever instead. Because it\'s awesome.',
-	'Pretty. damn. smart.']
+	'Pretty. damn. smart.'
+	'My mom saw this and said she\'s sending you cookies. Thank you.',
+	'How do you always manage to fit so much meaning into so few words?',
+	'Deeper than the marina trench.',
+	'God? Is that you?',
+	'I\'m working on another bot just to keep up with how much I agee with you.',
+	'How do you spell that? Because Im getting a tattoo of it.',
+	'Ah yes. Mark 23:12. A wise verse.']
 
 appendPhrase = '\n\n^(Need some backup?) [^"/u/agreeswithmebot"](https://github.com/jhaenchen/agreeswithmebot)'
 while True:
@@ -34,7 +43,7 @@ while True:
 		for message in r.get_unread(unset_has_mail=True, update_user=True):
 			if("!agree" in message.body.lower() or  "/u/agreeswithmebot" in message.body.lower()):
 
-				if ("that" in message.body.lower()):
+				if ("!parent" in message.body.lower()):
 					print "Got child  message, sending parent reply"
 					parent = r.get_info(thing_id=message.parent_id)
 					if(isinstance(parent, praw.objects.Comment)):
@@ -47,6 +56,8 @@ while True:
 			message.mark_as_read()
 		print "sleeping..."
 		time.sleep(210)
+	except requests.exceptions.ReadTimeout:
+		"Read timeout. Will try again."
 	except praw.errors.HTTPException:
 		print "Http exception. Will try again."
 	except praw.errors.RateLimitExceeded as error:
@@ -59,6 +70,7 @@ while True:
 		raise
 	except:
 		print "Unhandled exception, bail!"
+		r.send_message('therealjakeh', 'AgreesWithMeBot', 'Just went down! Help!')
 		raise
 
 

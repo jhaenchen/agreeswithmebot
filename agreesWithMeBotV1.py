@@ -2,6 +2,7 @@ import praw
 import time
 import random
 from pprint import pprint
+import re
 import requests
 r = praw.Reddit('agreeswithme'
 		'Url:http://imtoopoorforaurl.com')
@@ -13,9 +14,6 @@ prawWords = ['!agree']
 
 
 agreePhrases=[
-	'I\'m unsure of how you were able to craft this masterpiece, but simply saying that I agree seems shallow and unsophisticated in comparison. You speak to what is in all of our hearts.',
-	'You know, you\'re right. Here, have an upvote on me!',
-	'That\'s really sharp! I couldn\'t agree more.',
 	'Whoa, that makes so much sense. Thank you, sensei.',
 	'Brilliant. Simply brilliant.',
 	'This mans name? Albert Einstein.',
@@ -46,15 +44,17 @@ appendPhrase = '\n\n^(Need some backup?) [^"/u/agreeswithmebot"](https://github.
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/r/agreeswithmebot) ^^|| ^^[Add](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^an ^^agreement'
 
 def generateQuote(message):
-	quote = "."
-	if("." in message.body):
-		indexOf = message.body.index(".")
-		endQuote = len(message.body)
-		substring = message.body[indexOf+1:]
-		if("." in substring):
-			endQuote = substring.index(".")
-		quote = "\n>" + message.body[indexOf+1:indexOf+endQuote+1]+"\n\n"
-	return quote;
+	#Remove links so periods don't get noticed and elipses'
+	text = re.sub(r'\(.*?\)|\.{3,}|\[|\]','', message.body)
+	segments = text.split(".")
+	#Sometimes it gives us an empty string if the comment ends with a period
+	#So let's strip it out'
+	if (len(segments[len(segments)-1]) == 0):
+		segments.pop();
+	chosenSentence = segments[random.randrange(0, len(segments))]
+	#If the sentence starts with a newline remove that
+	chosenSentence = re.sub(r'\n{1,}','',chosenSentence)
+	return "\n>" + chosenSentence + "\n\n"
 
 while True:
 	try:
@@ -68,9 +68,14 @@ while True:
 					if(isinstance(parent, praw.objects.Comment)):
 						quote = generateQuote(parent)
 						print quote
-						parent.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+						newComment = parent.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+						user = message.author
+						r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I sent [your agreement]('+newComment.permalink+'). Just a heads up.')
 					elif(isinstance(parent, praw.objects.Submission)):
 						parent.add_comment(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+						user = message.author
+						newComment = parent.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+						r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I sent [your agreement]('+newComment.permalink+'). Just a heads up.')
 					else:
 						message.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 				else:
@@ -86,7 +91,7 @@ while True:
 	except praw.errors.Forbidden:
 		print "Im banned from there."
 		user = message.author
-		r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I\'m banned from there. Sorry.')
+		r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I\'m banned from \\r\\'+message.subreddit.display_name+'. Sorry.')
 		message.mark_as_read()
 	except praw.errors.HTTPException as e:
 		pprint(vars(e))	

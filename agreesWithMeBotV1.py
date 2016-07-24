@@ -4,13 +4,23 @@ import random
 from pprint import pprint
 import re
 import requests
+from threading import Thread
 r = praw.Reddit('agreeswithme'
 		'Url:http://imtoopoorforaurl.com')
 
 r.login()
 already_done=[]
 
-prawWords = ['!agree']
+def findNegCommentsAndDelete():
+	while(1):
+		comments = r.user.get_comments('new')
+		for comment in comments:
+			if(comment.score < 0):
+				comment.delete()
+		time.sleep(500)
+
+thread = Thread(target = findNegCommentsAndDelete)
+thread.start()
 
 
 agreePhrases=[
@@ -38,7 +48,7 @@ agreePhrases=[
 	'How do you spell that? Because Im getting a tattoo of it.',
 	'Ah yes. Mark 23:12. A wise verse.']
 
-appendPhrase = '\n\n^(Need some backup?) [^"/u/agreeswithmebot"](https://github.com/jhaenchen/agreeswithmebot)'
+appendPhrase = '\n\n^(Need some backup?) [^"/u/agreeswithmebot"](https://github.com/jhaenchen/agreeswithmebot)! ^| ^(I delete negative comments)'
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/u/agreeswithmebot)\n\n^[^Contribute](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^[^an](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^[^agreement](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^(|) ^[^Github](https://github.com/jhaenchen/agreeswithmebot) ^^(|) ^[^Subreddit](https://reddit.com/r/agreeswithmebot)'
 
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/r/agreeswithmebot) ^^|| ^^[Add](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^an ^^agreement'
@@ -54,6 +64,7 @@ def generateQuote(message):
 	chosenSentence = segments[random.randrange(0, len(segments))]
 	#If the sentence starts with a newline remove that
 	chosenSentence = re.sub(r'\n{1,}','',chosenSentence)
+	chosenSentence.replace("\u\agreeswithmebot", '')
 	return "\n>" + chosenSentence + "\n\n"
 
 while True:
@@ -85,7 +96,7 @@ while True:
 					message.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 			message.mark_as_read()
 		print "sleeping..."
-		time.sleep(210)
+		time.sleep(15)
 	except requests.exceptions.ReadTimeout:
 		print "Read timeout. Will try again."
 	except praw.errors.Forbidden:

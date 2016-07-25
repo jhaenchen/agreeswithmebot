@@ -48,7 +48,7 @@ agreePhrases=[
 	'How do you spell that? Because Im getting a tattoo of it.',
 	'Ah yes. Mark 23:12. A wise verse.']
 
-appendPhrase = '\n\n^(Need some backup?) [^"/u/agreeswithmebot"](https://github.com/jhaenchen/agreeswithmebot)! ^| ^(I delete negative comments)'
+appendPhrase = '\n\n^(Need some backup?) ^"/u/agreeswithmebot"! ^| ^(I delete negative comments)'
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/u/agreeswithmebot)\n\n^[^Contribute](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^[^an](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^[^agreement](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^(|) ^[^Github](https://github.com/jhaenchen/agreeswithmebot) ^^(|) ^[^Subreddit](https://reddit.com/r/agreeswithmebot)'
 
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/r/agreeswithmebot) ^^|| ^^[Add](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^an ^^agreement'
@@ -64,7 +64,7 @@ def generateQuote(message):
 	chosenSentence = segments[random.randrange(0, len(segments))]
 	#If the sentence starts with a newline remove that
 	chosenSentence = re.sub(r'\n{1,}','',chosenSentence)
-	chosenSentence.replace("\u\agreeswithmebot", '')
+	chosenSentence.replace("/u/agreeswithmebot", '')
 	return "\n>" + chosenSentence + "\n\n"
 
 while True:
@@ -79,9 +79,15 @@ while True:
 					if(isinstance(parent, praw.objects.Comment)):
 						quote = generateQuote(parent)
 						print quote
-						newComment = parent.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
-						user = message.author
-						r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I sent [your agreement]('+newComment.permalink+'). Just a heads up.')
+						if(parent.author.name == "agreeswithmebot"):
+							quote = 'Uh oh, we got ourselves a smart guy here! Try again :)'
+							newComment = message.reply(quote)
+							user = message.author
+							r.send_message(user.name, 'AgreesWithMeBot', 'Hey, you seem pretty clever. Maybe contribute to our [github](https://github.com/jhaenchen/agreeswithmebot)?')
+						else:
+							newComment = parent.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
+							user = message.author
+							r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I sent [your agreement]('+newComment.permalink+'). Just a heads up.')
 					elif(isinstance(parent, praw.objects.Submission)):
 						parent.add_comment(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 						user = message.author

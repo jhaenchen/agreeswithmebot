@@ -48,7 +48,7 @@ agreePhrases=[
 	'How do you spell that? Because Im getting a tattoo of it.',
 	'Ah yes. Mark 23:12. A wise verse.']
 
-appendPhrase = '\n\n^(Need some backup?) ^"/u/agreeswithmebot"! ^| ^(I delete negative comments)'
+appendPhrase = '\n\n^(Need some backup?) ^"/u/agreeswithmebot"!'
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/u/agreeswithmebot)\n\n^[^Contribute](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^[^an](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^[^agreement](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^(|) ^[^Github](https://github.com/jhaenchen/agreeswithmebot) ^^(|) ^[^Subreddit](https://reddit.com/r/agreeswithmebot)'
 
 #appendPhrase = '\n\n *** \n^^(Need) ^^(backup?) ^[^"/u/agreeswithmebot"!](https://reddit.com/r/agreeswithmebot) ^^|| ^^[Add](https://www.reddit.com/r/agreeswithmebot/submit?text=%20&title=Agree:%3Cyour%20text%20here%3E) ^^an ^^agreement'

@@ -5,8 +5,8 @@ from pprint import pprint
 import re
 import requests
 from threading import Thread
-r = praw.Reddit('agreeswithme'
-		'Url:http://imtoopoorforaurl.com')
+
+r = praw.Reddit('agreeswithmebot')
 
 r.login()
 already_done=[]

@@ -69,16 +69,16 @@ def generateQuote(message):
 
 while True:
 	try:
-		print "checking..."
+		print("checking...")
 		#Check my messages
 		for message in r.get_unread(unset_has_mail=True, update_user=True):
 			if("!agree" in message.body.lower() or  "/u/agreeswithmebot" in message.body.lower()):
 				if ("!parent" in message.body.lower()):
-					print "Got child  message, sending parent reply"
+					print("Got child  message, sending parent reply")
 					parent = r.get_info(thing_id=message.parent_id)
 					if(isinstance(parent, praw.objects.Comment)):
 						quote = generateQuote(parent)
-						print quote
+						print(quote)
 						if(parent.author.name == "agreeswithmebot"):
 							quote = 'Uh oh, we got ourselves a smart guy here! Try again :)'
 							newComment = message.reply(quote)
@@ -96,36 +96,36 @@ while True:
 					else:
 						message.reply(agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 				else:
-					print "Got message, sending reply"
+					print("Got message, sending reply")
 					quote = generateQuote(message)
-					print quote
+					print(quote)
 					message.reply(quote+agreePhrases[random.randrange(0,len(agreePhrases))]+appendPhrase)
 			message.mark_as_read()
-		print "sleeping..."
+		print("sleeping...")
 		time.sleep(15)
 	except requests.exceptions.ReadTimeout:
-		print "Read timeout. Will try again."
+		print("Read timeout. Will try again.")
 	except praw.errors.Forbidden:
-		print "Im banned from there."
+		print("Im banned from there.")
 		user = message.author
 		r.send_message(user.name, 'AgreesWithMeBot', 'Hey, I\'m banned from \\r\\'+message.subreddit.display_name+'. Sorry.')
 		message.mark_as_read()
 	except praw.errors.HTTPException as e:
 		pprint(vars(e))	
 		print(e)
-		print "Http exception. Will try again."
+		print("Http exception. Will try again.")
 	except praw.errors.RateLimitExceeded as error:
-		print '\tSleeping for %d seconds' % error.sleep_time
-            	time.sleep(error.sleep_time)		
+		print('\tSleeping for %d seconds' % error.sleep_time)
+		time.sleep(error.sleep_time)		
 	except requests.exceptions.ConnectionError:
-		print "ConnectionError. Will try again."
+		print("ConnectionError. Will try again.")
 	except praw.errors.APIException:
-		print "API exception. Will try again."
+		print("API exception. Will try again.")
 	except (KeyboardInterrupt, SystemExit):
-		print "Safe exit..."
+		print("Safe exit...")
 		raise
 	except:
-		print "Unhandled exception, bail!"
+		print("Unhandled exception, bail!")
 		r.send_message('therealjakeh', 'AgreesWithMeBot', 'Just went down! Help!')
 		raise
 
